@@ -1,0 +1,77 @@
+﻿@model IEnumerable<WebAppEs.ViewModel.Store.StoreHeadViewModel>
+@{
+    ViewData["Title"] = "Store";
+}
+<div class="breadcomb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="breadcomb-wp">
+                                <div class="breadcomb-icon">
+                                    <i class="fa fa-list"></i>
+                                </div>
+                                <div style="padding-top: 13px;" class="breadcomb-ctn">
+                                    <h2>Excel Data List</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                            <div class="breadcomb-report">
+                                <a data-toggle="tooltip" asp-action="CreateStore" data-placement="left" title="Add Model" class="btn"><i class="notika-icon notika-plus-symbol"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="data-table-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="data-table-list">
+                    <div class="table-responsive">
+                        <table id="data-table-basic" class="table table-striped">
+                            <thead style="background-color: #d7e3ef;">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Model</th>
+                                    <th>Lot</th>
+                                    <th>Employe ID</th>
+                                    <th style="text-align:center">Action's</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateString)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ModelName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.LotNo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EmployeeID)
+                                        </td>
+                                        <td style="text-align:center">
+                                            <a style=" font-size: large; color: blue;" asp-action="CreateStore" asp-controller="Store" asp-route-id="@item.Id"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

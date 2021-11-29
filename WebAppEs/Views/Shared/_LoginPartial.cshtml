@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" asp-area="Identity" asp-page="/Account/Manage/Index" title="User Profile"><i class="fa fa-user"></i></a>
+    </li>
+    <li class="nav-item dropdown">
+        <a asp-area="" asp-controller="Account" asp-action="Logout" class=""><span><i style="color:red" class="fa fa-sign-out"></i></span>Logout</a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}

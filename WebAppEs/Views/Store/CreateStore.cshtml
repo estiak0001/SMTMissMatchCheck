@@ -1,0 +1,497 @@
+﻿@model WebAppEs.ViewModel.Store.StoreViewModel
+@{
+    ViewData["Title"] = "Store";
+}
+
+<style>
+
+    .bootstrap-select > .btn-default::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        content: "";
+        height: calc(100% - 2px);
+        width: 30px;
+        background-color: #FFF;
+        background-position: right calc(100% - 7px);
+        background-repeat: no-repeat;
+        background-image: url(../../SiteTheme/images/select.png) !important;
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 100%;
+    }
+
+    .checkedclass {
+        border: 2px solid green;
+        color: #2338aa;
+        font-weight: bolder;
+    }
+
+    .checkedclass2 {
+        border: 2px solid #ff0202;
+        color: #2338aa;
+        font-weight: bolder;
+    }
+
+    .table.table-condensed > tbody > tr > td, .table.table-condensed > tbody > tr > th, .table.table-condensed > tfoot > tr > td, .table.table-condensed > tfoot > tr > th, .table.table-condensed > thead > tr > td, .table.table-condensed > thead > tr > th {
+        border-top: 1px solid #F5F5F5;
+        font-size: 13px;
+        color: #333;
+        padding: 10px;
+    }
+
+    .dataTables_filter input, .dataTables_filter select, .dataTables_length input, .dataTables_length select {
+        border: 1px solid #337ab7;
+        height: 35px;
+        padding: 7px 15px;
+        font-size: 13px;
+        border-radius: 4px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        line-height: 100%;
+        background-color: #fbf4ea;
+        outline: none;
+    }
+
+    .table.table-condensed > tbody > tr > td, .table.table-condensed > tbody > tr > th, .table.table-condensed > tfoot > tr > td, .table.table-condensed > tfoot > tr > th, .table.table-condensed > thead > tr > td, .table.table-condensed > thead > tr > th {
+        border-top: 1px solid #000000;
+        font-size: 13px;
+        color: #080808;
+        padding: 4px;
+    }
+
+    .bacColor {
+        background: #ffd70040 !important;
+    }
+
+    .bacColor2 {
+        background: #bdff9340 !important;
+    }
+    .bootstrap-select .dropdown-toggle:focus {
+        outline: none !important;
+        outline: none !important;
+        outline-offset: -2px;
+    }
+</style>
+
+<div class="breadcomb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-example-wrap">
+                    <form id="myform" asp-controller="Store" asp-action="CreateStore" method="post" enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-2 col-sm-2 col-xs-12">
+                                <label style="padding-left:10px">Date</label>
+                                <div class="form-group ic-cmp-int">
+                                    <div class="form-ic-cmp">
+                                        <i class="notika-icon notika-calendar"></i>
+                                    </div>
+                                    <div class="nk-int-st">
+                                        @if (Model.IsUpdate == "Update")
+                                        {
+                                            <input disabled id="txtdate" required type="date" asp-for="Date" class="form-control" placeholder="Date">
+                                        }
+                                        else
+                                        {
+                                            <input id="txtdate" required type="date" asp-for="Date" class="form-control" placeholder="Date">
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                <label style="">Model</label>
+                                <div class="bootstrap-select fm-cmp-mg">
+                                    @if (Model.IsUpdate == "Update")
+                                    {
+                                        <select id="ddlModel" disabled required asp-for="PartsModelID" class="selectpicker" data-live-search="true">
+                                            <option value="@Model.PartsModelID">--Select Model--</option>
+                                            @foreach (var item in Model.PartsModelViewModel)
+                                            {
+                                                <option value="@item.ID">@item.Name</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select id="ddlModel" required asp-for="PartsModelID" class="selectpicker" data-live-search="true">
+                                            <option value="@Model.PartsModelID">--Select Model--</option>
+                                            @foreach (var item in Model.PartsModelViewModel)
+                                            {
+                                                <option value="@item.ID">@item.Name</option>
+                                            }
+                                        </select>
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                <label style="">Lot</label>
+                                <div class="bootstrap-select fm-cmp-mg">
+                                    @if (Model.IsUpdate == "Update")
+                                    {
+                                        <select disabled id="ddlLot" required asp-for="LotNo" class="selectpicker">
+                                            <option value="@Model.LotNo">--Select Lot--</option>
+                                            <option value="1st">1st</option>
+                                            <option value="2nd">2nd</option>
+                                            <option value="3rd">3rd</option>
+                                            <option value="4th">4th</option>
+                                            <option value="5th">5th</option>
+                                            <option value="6th">6th</option>
+                                            <option value="7th">7th</option>
+                                            <option value="8th">8th</option>
+                                            <option value="9th">9th</option>
+                                            <option value="10th">10th</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select id="ddlLot" required asp-for="LotNo" class="selectpicker">
+                                            <option value="@Model.LotNo">--Select Lot--</option>
+                                            <option value="1st">1st</option>
+                                            <option value="2nd">2nd</option>
+                                            <option value="3rd">3rd</option>
+                                            <option value="4th">4th</option>
+                                            <option value="5th">5th</option>
+                                            <option value="6th">6th</option>
+                                            <option value="7th">7th</option>
+                                            <option value="8th">8th</option>
+                                            <option value="9th">9th</option>
+                                            <option value="10th">10th</option>
+                                        </select>
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <label style="padding-left:10px">Excel File</label>
+                                <div class="form-group ic-cmp-int">
+                                    <div class="form-ic-cmp">
+                                        <i class="notika-icon notika-file"></i>
+                                    </div>
+                                    <div class="nk-int-st">
+                                        @if (Model.IsUpdate == "Update")
+                                        {
+                                            <input disabled id="txtFile" required style="padding: 5px" type="file" name="postedFile" class="form-control" accept=".xlsx, .xls, .csv" placeholder="Contact Number">
+                                        }
+                                        else
+                                        {
+                                            <input id="txtFile" required style="padding: 5px" type="file" name="postedFile" class="form-control" accept=".xlsx, .xls, .csv" placeholder="Contact Number">
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding-right: 15px;" class="row">
+                            <div id="divProcessing" style="text-align: -webkit-center;" class="col-md-10">
+                                <div class="loader"></div>
+                            </div>
+                            <div style="float: right;" class="col-md-2">
+                                @if (Model.IsUpdate == "Update")
+                                {
+                                    <button disabled onclick="LoadDiv()" style="float: right;" class="btn btn-primary btn-icon-notika" type="submit"><i class="fa fa-arrow-circle-o-up pr-2"></i> Import Data</button>
+                                }
+                                else
+                                {
+                                    <button onclick="LoadDiv()" style="float: right;" class="btn btn-primary btn-icon-notika" type="submit"><i class="fa fa-arrow-circle-o-up pr-2"></i> Import Data</button>
+                                }
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="chatAudio" style="display:none" controls="controls"><source src="~/NotifySound/notifyWarningSound.wav" type="audio/mpeg" /></audio>
+
+@if (Model != null)
+{
+    var count = 0;
+    <div class="data-table-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="data-table-list">
+                        <div class="basic-tb-hd">
+                            <h2 style="margin:0px; padding-bottom:3px;">Imported Data From Excel</h2>
+                            <h5 style="color:red; margin:3px"><span><i style="color:#ffd800" class="@ViewData["Icon"]"></i></span> @ViewData["Messege"]</h5>
+                        </div>
+                        <hr />
+                        <div id="datatableforloadedData" class="table-responsive">
+
+                            <table id="data-table-basic" class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th hidden>
+
+                                        </th>
+                                        <th style="text-align:center">
+                                            SL#
+                                        </th>
+                                        <th style="text-align:center">
+                                            Location
+                                        </th>
+                                        <th style="text-align:center">
+                                            Part Number
+                                        </th>
+                                        <th style="text-align:center">
+                                            Feeder Name
+                                        </th>
+                                        <th style="text-align:center">
+                                            QR Code
+                                        </th>
+                                        @*<th style="text-align:center">
+                                            </th>*@
+                                        <th style="text-align:center">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var row in Model.StoreViewModels)
+                                    {
+                                        count++;
+
+
+                                        @*<td style="text-align: center; vertical-align: middle;"><input class="qrcodeclass_01_@count form-control form-control-sm" type="text" name="yes" id="txtBarCode1" onkeyup="barcode1(@count)"></td>*@
+
+                                        @if (Model.IsUpdate == "Update")
+                                        {
+                                            if (row.Status == true)
+                                            {
+                                                <tr id="table_@count" class="table_row_@count bacColor2">
+                                                    <td hidden class="DetailsId_@count" style="text-align: center; vertical-align: middle;">@row.Id</td>
+                                                    <td class="rowID_@count" style="text-align: center; vertical-align: middle;">@count</td>
+                                                    <td style="text-align: center; vertical-align: middle;">@row.Location</td>
+                                                    <td class="partNumber_@count" style="text-align: center; vertical-align: middle;">@row.PartNumber</td>
+                                                    <td style="text-align: center; vertical-align: middle;">@row.FeederName</td>
+                                                    <td style="text-align: center; vertical-align: middle;"><input disabled class="dbclasss qrcodeclass_02_@count form-control form-control-sm" type="text" name="yes" id="txtBarCode_@count" onkeyup="barcode2(@count)"></td>
+                                                    <td style="text-align: center; padding: 0px; vertical-align: middle;"><i style="color: green; font-size: 29px;" class="status2_@count fa fa-check-circle"></i></td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr id="table_@count" class="table_row_@count bacColor">
+                                                    <td hidden class="DetailsId_@count" style="text-align: center; vertical-align: middle;">@row.Id</td>
+                                                    <td class="rowID_@count" style="text-align: center; vertical-align: middle;">@count</td>
+                                                    <td style="text-align: center; vertical-align: middle;">@row.Location</td>
+                                                    <td class="partNumber_@count" style="text-align: center; vertical-align: middle;">@row.PartNumber</td>
+                                                    <td style="text-align: center; vertical-align: middle;">@row.FeederName</td>
+                                                    <td style="text-align: center; vertical-align: middle;"><input class="dbclasss qrcodeclass_02_@count form-control form-control-sm" type="text" name="yes" id="txtBarCode_@count" onkeyup="barcode2(@count)"></td>
+                                                    <td style="text-align: center; padding: 0px; vertical-align: middle;"><i style="color: red; font-size: 29px; " class="status1_@count fa fa-times-circle"></i><i style="color: green; font-size: 29px; display:none" class="status2_@count fa fa-check-circle"></i></td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr id="table_@count" class="table_row_@count">
+                                                <td hidden class="DetailsId_@count" style="text-align: center; vertical-align: middle;">@row.Id</td>
+                                                <td class="rowID_@count" style="text-align: center; vertical-align: middle;">@count</td>
+                                                <td style="text-align: center; vertical-align: middle;">@row.Location</td>
+                                                <td class="partNumber_@count" style="text-align: center; vertical-align: middle;">@row.PartNumber</td>
+                                                <td style="text-align: center; vertical-align: middle;">@row.FeederName</td>
+                                                <td style="text-align: center; vertical-align: middle;"><input class="dbclasss qrcodeclass_02_@count form-control form-control-sm" type="text" name="yes" id="txtBarCode_@count" onkeyup="barcode2(@count)"></td>
+                                                <td style="text-align: center; padding: 0px; vertical-align: middle;"><i style="color: red; font-size: 29px; display:none" class="status1_@count fa fa-times-circle"></i><i style="color: green; font-size: 29px; display:none" class="status2_@count fa fa-check-circle"></i></td>
+                                            </tr>
+                                        }
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<br />
+<br />
+<br />
+<br />
+<br />
+
+@section scripts{
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+                    window.onload = function () {
+                        @*alert("@ViewBag.Message");*@
+                        swal("Alert!", "@ViewBag.Message", "@ViewBag.Status");
+                    };
+        </script>
+    }
+
+    <script>
+
+    $("#datatableforloadedData table td").dblclick(function (e) {
+        e.stopPropagation();
+        var InputID = $(this).prop('id');
+        /*var value = $(this).html();*/
+        //$("#" + InputID).removeProp('disabled');
+        $(this).find('input').removeProp('disabled');
+        //$(this).focus();
+        //alert(value);
+    });
+
+    $("#divProcessing").hide();
+
+    $('#data-table-basic').DataTable({
+        "ordering": false,
+        "lengthMenu": [10, 20, 50, 100, 200, 500],
+    });
+
+    var QRCODE1 = "";
+    var QRCODE2 = "";
+
+    function barcode2(c2) {
+            var inp2 = $(".qrcodeclass_02_" + c2);
+            //var tbl = document.getElementById("myTable");
+            if (event.keyCode == 13) {
+                if (inp2.val().length > 0) {
+                    //var textOfTd = $("#data-table-basic").find(".rowID_" + c2).text();
+                    var partNumber = $("#data-table-basic").find(".partNumber_" + c2).text().trim();
+                    //alert(partNumber);
+                    //Match Second QR
+                    QRCODE1 = partNumber;
+                    QRCODE2 = "";
+                    QRCODE2 = inp2.val();
+
+                    if (QRCODE1 === QRCODE2) {
+
+                        var ID = $(".DetailsId_" + c2).text();
+                        var Status = true;
+                        var data = {
+                            Id: ID,
+                            Status: Status
+                        }
+                        $.ajax({
+                             data: data,
+                             url: '@Url.Action("UpdateStoreScanData", "Store")',
+                             type: 'GET',
+                             dataType: "JSON",
+                             contentType: "application/json",
+                            success: function (response) {
+                                //console.log(response);
+                                //console.log(response.isSuccess);
+                                //alert(response.isSuccess);
+
+                                if (response.isSuccess) {
+                                    $(".table_row_" + c2).removeClass("bacColor");
+                                    $(".table_row_" + c2).addClass("bacColor2");
+                                    $(".qrcodeclass_01_" + c2).removeClass("checkedclass2")
+                                    $(".qrcodeclass_02_" + c2).removeClass("checkedclass2")
+                                    $(".qrcodeclass_01_" + c2).addClass("checkedclass");
+                                    $(".qrcodeclass_02_" + c2).addClass("checkedclass");
+                                    $('.status2_' + c2).show();
+                                    $('.status1_' + c2).hide();
+                                    //next Input
+                                    var $canfocus = $(':focusable');
+                                    var index = $canfocus.index(document.activeElement) + 1;
+                                    if (index >= $canfocus.length) index = 0;
+                                    $canfocus.eq(index).focus();
+
+                                    console.log(QRCODE1);
+                                    console.log(QRCODE2);
+                                    QRCODE1 = "";
+                                    QRCODE2 = "";
+                                } else {
+                                    $(".table_row_" + c2).addClass("bacColor");
+                                    $('#chatAudio')[0].play();
+                                    $(".qrcodeclass_01_" + c2).addClass("checkedclass2");
+                                    $(".qrcodeclass_02_" + c2).addClass("checkedclass2");
+                                    $('.status2_' + c2).hide();
+                                    $('.status1_' + c2).show();
+                                    $(".qrcodeclass_01_" + c2).val('');
+                                    $(".qrcodeclass_02_" + c2).val('');
+                                    //var $canfocus = $(':focusable');
+                                    //var index = $canfocus.index(document.activeElement) - 1;
+                                    //if (index >= $canfocus.length) index = 0;
+                                    //$canfocus.eq(index).focus();
+                                    console.log(QRCODE1);
+                                    console.log(QRCODE2);
+                                    QRCODE1 = "";
+                                    QRCODE2 = "";
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        $(".table_row_" + c2).addClass("bacColor");
+                        $('#chatAudio')[0].play();
+                        $(".qrcodeclass_01_" + c2).addClass("checkedclass2");
+                        $(".qrcodeclass_02_" + c2).addClass("checkedclass2");
+                        $('.status2_' + c2).hide();
+                        $('.status1_' + c2).show();
+                        $(".qrcodeclass_01_" + c2).val('');
+                        $(".qrcodeclass_02_" + c2).val('');
+                        //var $canfocus = $(':focusable');
+                        //var index = $canfocus.index(document.activeElement) - 1;
+                        //if (index >= $canfocus.length) index = 0;
+                        //$canfocus.eq(index).focus();
+                        console.log(QRCODE1);
+                        console.log(QRCODE2);
+                        QRCODE1 = "";
+                        QRCODE2 = "";
+                    }
+                } else {
+                    //alert("Barcode length insufficient");
+                    inp2.val('');
+                }
+            }
+    }
+    function LoadDiv() {
+        if ($('#ddlLot').val() == "") {
+            $("#divProcessing").hide();
+        }
+        else if ($('#ddlModel').val() == "") {
+            $("#divProcessing").hide();
+        }
+        else if ($('#txtdate').val() == "") {
+            $("#divProcessing").hide();
+        }
+        else if ($('#txtFile').val() == "") {
+            $("#divProcessing").hide();
+        }
+        else {
+            $('#divProcessing').show();
+        }
+    }
+
+    function UpdateStatus(ID, Status) {
+        var isTrue = false;
+        var data = {
+            Id: ID,
+            Status: Status
+        }
+        $.ajax({
+             data: data,
+             url: '@Url.Action("UpdateStoreScanData", "Store")',
+             type: 'GET',
+             dataType: "JSON",
+             contentType: "application/json",
+            success: function (response) {
+                //console.log(response);
+                //console.log(response.isSuccess);
+                //alert(response.isSuccess);
+
+                if (response.isSuccess) {
+                    isTrue = true;
+                } else {
+                    isTrue = false;
+                }
+            }
+         });
+        return isTrue;
+     }
+    </script>
+}
+
