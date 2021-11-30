@@ -301,7 +301,7 @@ namespace WebAppEs.Services
 								  DateString = String.Format("{0:MM/dd/yyyy}", m.Date),
 								  ModelName = rm.ModelName,
 								  LotNo = m.LotNo,
-								  
+								  IsComplete = (_context.MobileRND_StoreDetails.Where(x => x.HeadID == m.Id).Any(p => p.Status == false)) == true ? "In Complete" : "Complete"
 							  }).AsNoTracking().OrderByDescending(x => x.Date).ToList();
 			return items;
 		}

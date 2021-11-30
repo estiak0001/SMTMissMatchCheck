@@ -2,6 +2,36 @@
 @{
     ViewData["Title"] = "Store";
 }
+<style>
+    .badge-successs {
+        display: inline-block;
+        min-width: 10px;
+        padding: 3px 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #19a735;
+        border-radius: 10px;
+    }
+    .badge-Dangerr {
+        display: inline-block;
+        min-width: 10px;
+        padding: 3px 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #ffca5e;
+        border-radius: 10px;
+    }
+</style>
 <div class="breadcomb-area">
     <div class="container">
         <div class="row">
@@ -20,7 +50,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
                             <div class="breadcomb-report">
-                                <a data-toggle="tooltip" asp-action="CreateStore" data-placement="left" title="Add Model" class="btn"><i class="notika-icon notika-plus-symbol"></i></a>
+                                <a data-toggle="tooltip" asp-action="CreateStore" data-placement="left" title="Add New Data" class="btn"><i class="notika-icon notika-plus-symbol"></i></a>
                             </div>
                         </div>
                     </div>
@@ -42,6 +72,7 @@
                                     <th>Date</th>
                                     <th>Model</th>
                                     <th>Lot</th>
+                                    <th>Status</th>
                                     <th>Employe ID</th>
                                     <th style="text-align:center">Action's</th>
                                 </tr>
@@ -58,6 +89,20 @@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.LotNo)
+                                        </td>
+                                        <td>
+                                            @if (item.IsComplete == "Complete")
+                                            {
+                                                <span class="badge-successs">
+                                                    @Html.DisplayFor(modelItem => item.IsComplete)
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge-Dangerr">
+                                                    @Html.DisplayFor(modelItem => item.IsComplete)
+                                                </span>
+                                            }
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.EmployeeID)

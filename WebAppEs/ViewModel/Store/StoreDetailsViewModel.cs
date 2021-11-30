@@ -11,7 +11,7 @@ namespace WebAppEs.ViewModel.Store
         public Guid? HeadID { get; set; }
         public string EmployeeID { get; set; }
         public DateTime? Date { get; set; }
-        public string SLNO { get; set; }
+        public int SLNO { get; set; }
         public string Location { get; set; }
         public string Moduler { get; set; }
         public string Feeder { get; set; }

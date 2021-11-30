@@ -17,6 +17,8 @@ namespace WebAppEs.ViewModel.Store
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedOn { get; set; }
         public Guid LUser { get; set; }
-       
+
+        public string IsComplete { get; set; }
+
     }
 }

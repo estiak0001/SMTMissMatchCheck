@@ -209,8 +209,10 @@ namespace WebAppEs.Controllers
             List<StoreDetailsViewModel> DataList = new List<StoreDetailsViewModel>();
             try
             {
+                int count = 0;
                 for (int i = 0; i < SetData.Rows.Count; i++)
                 {
+                    count++;
                     string[] authorsList = SetData.Rows[i]["Location"].ToString().Split("-");
                     var Moduler = authorsList[0].Trim();
                     var Feeder = authorsList[1].Trim();
@@ -220,6 +222,7 @@ namespace WebAppEs.Controllers
                     data.Feeder = Feeder;
                     data.PartNumber = SetData.Rows[i]["PartNumber"].ToString();
                     data.FeederName = SetData.Rows[i]["FeederName"].ToString();
+                    data.SLNO = count;
                     DataList.Add(data);
                 }
 

@@ -21,8 +21,10 @@ namespace WebAppEs.Entity
         [StringLength(50)]
         public string EmployeeID { get; set; }
 
-        [StringLength(50)]
-        public string SLNO { get; set; }
+        [Required]
+        //[StringLength(50)]
+        public int SLNO { get; set; } = 0;
+
         [StringLength(50)]
         public string Moduler { get; set; }
         [StringLength(150)]

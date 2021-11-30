@@ -64,7 +64,7 @@
     }
 
     .bacColor {
-        background: #ffd70040 !important;
+        background: #ffd7001a!important;
     }
 
     .bacColor2 {
@@ -74,6 +74,11 @@
         outline: none !important;
         outline: none !important;
         outline-offset: -2px;
+    }
+    .btn-defaults {
+        color: #fff;
+        background-color: #060606;
+        border-color: #000;
     }
 </style>
 
@@ -134,7 +139,7 @@
                                 <div class="bootstrap-select fm-cmp-mg">
                                     @if (Model.IsUpdate == "Update")
                                     {
-                                        <select disabled id="ddlLot" required asp-for="LotNo" class="selectpicker">
+                                        <select style="color: black;" disabled id="ddlLot" required asp-for="LotNo" class="selectpicker">
                                             <option value="@Model.LotNo">--Select Lot--</option>
                                             <option value="1st">1st</option>
                                             <option value="2nd">2nd</option>
@@ -150,7 +155,7 @@
                                     }
                                     else
                                     {
-                                        <select id="ddlLot" required asp-for="LotNo" class="selectpicker">
+                                        <select style="color: black;" id="ddlLot" required asp-for="LotNo" class="selectpicker">
                                             <option value="@Model.LotNo">--Select Lot--</option>
                                             <option value="1st">1st</option>
                                             <option value="2nd">2nd</option>
@@ -214,15 +219,22 @@
 
 @if (Model != null)
 {
-    var count = 0;
+    //var count = 0;
     <div class="data-table-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
-                            <h2 style="margin:0px; padding-bottom:3px;">Imported Data From Excel</h2>
-                            <h5 style="color:red; margin:3px"><span><i style="color:#ffd800" class="@ViewData["Icon"]"></i></span> @ViewData["Messege"]</h5>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h2 style="margin:0px; padding-bottom:3px;">Imported Data From Excel</h2>
+                                    <h5 style="color:red; margin:3px"><span><i style="color:#ffd800" class="@ViewData["Icon"]"></i></span> @ViewData["Messege"]</h5>
+                                </div>
+                                <div class="col-md-4">
+                                    <a style="float:right" asp-action="Index" class="btn btn-defaults btn-icon-notika"><i class="notika-icon notika-back"></i> Back to List</a>
+                                </div>
+                            </div>
                         </div>
                         <hr />
                         <div id="datatableforloadedData" class="table-responsive">
@@ -257,7 +269,7 @@
                                 <tbody>
                                     @foreach (var row in Model.StoreViewModels)
                                     {
-                                        count++;
+                                        //count++;
 
 
                                         @*<td style="text-align: center; vertical-align: middle;"><input class="qrcodeclass_01_@count form-control form-control-sm" type="text" name="yes" id="txtBarCode1" onkeyup="barcode1(@count)"></td>*@
@@ -266,6 +278,7 @@
                                         {
                                             if (row.Status == true)
                                             {
+                                                var count = row.SLNO; 
                                                 <tr id="table_@count" class="table_row_@count bacColor2">
                                                     <td hidden class="DetailsId_@count" style="text-align: center; vertical-align: middle;">@row.Id</td>
                                                     <td class="rowID_@count" style="text-align: center; vertical-align: middle;">@count</td>
@@ -278,6 +291,7 @@
                                             }
                                             else
                                             {
+                                                var count = row.SLNO;
                                                 <tr id="table_@count" class="table_row_@count bacColor">
                                                     <td hidden class="DetailsId_@count" style="text-align: center; vertical-align: middle;">@row.Id</td>
                                                     <td class="rowID_@count" style="text-align: center; vertical-align: middle;">@count</td>
@@ -291,6 +305,7 @@
                                         }
                                         else
                                         {
+                                            var count = row.SLNO;
                                             <tr id="table_@count" class="table_row_@count">
                                                 <td hidden class="DetailsId_@count" style="text-align: center; vertical-align: middle;">@row.Id</td>
                                                 <td class="rowID_@count" style="text-align: center; vertical-align: middle;">@count</td>
