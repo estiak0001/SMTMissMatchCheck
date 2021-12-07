@@ -7,6 +7,7 @@ using WebAppEs.ViewModel.Register;
 using WebAppEs.ViewModel.Model;
 using WebAppEs.ViewModel.Store;
 using WebAppEs.Entity;
+using WebAppEs.ViewModel.QCCheck;
 
 namespace WebAppEs.Services
 {
@@ -34,7 +35,21 @@ namespace WebAppEs.Services
 
 
 		bool UpdateSingelStatusFromStore(Guid Id, bool IsSuccess);
+
 		bool AddSingelStatusFromStore(MobileRND_Store_ScanHistoryVM viewModel);
 
+		//QC Check
+		MobileRND_QcTaskHead AddTaskHead(MobileRND_QcTaskHead_VM viewModel);
+		bool AddTaskHeadDetails(MobileRND_QcTaskHeadDetails_VM viewModel);
+
+		MobileRND_QcTaskHeadDetails_VM GetTopOrderValueForFalse(Guid? TaskHeadID);
+
+		MobileRND_QcTaskHeadDetails_VM GetTopOrderValueForRandom(Guid TaskHeadID, Guid ModelID, string lot, string Moduler, string feeder);
+
+		MobileRND_QcTaskHead_VM HeadWithDetails(Guid? Id);
+		List<MobileRND_QcTaskHead_VM> TaskHeadList();
+		bool UpdateSingelStatusFromQC(Guid Id, bool IsSuccess);
+
+		MobileRND_QcTaskHeadDetails AddRandomDataStatusFromQC(Guid? StoreDetailsId, Guid? TaskHeadID, bool status, string EmployeeID, Guid? Luser);
 	}
 }

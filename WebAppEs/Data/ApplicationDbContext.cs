@@ -19,7 +19,9 @@ namespace WebAppEs.Data
 		public DbSet<MobileRND_StoreHead> MobileRND_StoreHead { get; set; }
 		public DbSet<MobileRND_StoreDetails> MobileRND_StoreDetails { get; set; }
 		public DbSet<MobileRND_Store_ScanHistory> MobileRND_Store_ScanHistory { get; set; }
-		
+		public DbSet<MobileRND_QcTaskHead> MobileRND_QcTaskHead { get; set; }
+		public DbSet<MobileRND_QcTaskHeadDetails> MobileRND_QcTaskHeadDetails { get; set; }
+
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{

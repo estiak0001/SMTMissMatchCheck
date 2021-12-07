@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System;
+using WebAppEs.ViewModel.Home;
 
 namespace WebAppEs.Controllers
 {
@@ -36,8 +37,12 @@ namespace WebAppEs.Controllers
 			{
 				return RedirectToAction("Index", "Store");
 			}
-            
-			return View();
+
+			DashBoard_VM DashboardData = new DashBoard_VM();
+
+			DashboardData.MobileRND_QcTaskHead_List = _dataAccessService.TaskHeadList();
+
+			return View(DashboardData);
 		}
 		//[Authorize("Authorization")]
 		public IActionResult Privacy()

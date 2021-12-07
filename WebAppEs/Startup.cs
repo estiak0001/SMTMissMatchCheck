@@ -43,7 +43,7 @@ namespace WebAppEs
 			.Services.ConfigureApplicationCookie(options =>
 			{
 				options.SlidingExpiration = true;
-				options.ExpireTimeSpan = TimeSpan.FromHours(5);
+				options.ExpireTimeSpan = TimeSpan.FromHours(60);
 			});
 
 			services.Configure<CookiePolicyOptions>(options =>

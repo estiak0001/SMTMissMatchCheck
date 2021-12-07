@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAppEs.Data;
 
 namespace WebAppEs.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211202091533_addTaskHeadandDetails")]
+    partial class addTaskHeadandDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,108 +232,6 @@ namespace WebAppEs.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MobileRND_Models");
-                });
-
-            modelBuilder.Entity("WebAppEs.Entity.MobileRND_QcTaskHead", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("EmployeeID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("EndTime")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
-                        .HasMaxLength(50);
-
-                    b.Property<Guid>("LUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LineNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("LotNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<Guid>("ModelID")
-                        .HasColumnType("uniqueidentifier")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("StartTime")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("TaskType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MobileRND_QcTaskHead");
-                });
-
-            modelBuilder.Entity("WebAppEs.Entity.MobileRND_QcTaskHeadDetails", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateAndTime")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("EmployeeID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<Guid>("LUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit")
-                        .HasMaxLength(50);
-
-                    b.Property<Guid>("StoreDetailsID")
-                        .HasColumnType("uniqueidentifier")
-                        .HasMaxLength(50);
-
-                    b.Property<Guid>("TaskHeadID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskHeadID");
-
-                    b.ToTable("MobileRND_QcTaskHeadDetails");
                 });
 
             modelBuilder.Entity("WebAppEs.Entity.MobileRND_StoreDetails", b =>
@@ -591,15 +491,6 @@ namespace WebAppEs.Migrations
                     b.HasOne("WebAppEs.Data.NavigationMenu", "NavigationMenu")
                         .WithMany()
                         .HasForeignKey("NavigationMenuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WebAppEs.Entity.MobileRND_QcTaskHeadDetails", b =>
-                {
-                    b.HasOne("WebAppEs.Entity.MobileRND_QcTaskHead", "MobileRND_QcTaskHead")
-                        .WithMany()
-                        .HasForeignKey("TaskHeadID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

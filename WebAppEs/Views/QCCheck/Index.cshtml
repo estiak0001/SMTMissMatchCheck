@@ -1,0 +1,223 @@
+﻿@model WebAppEs.ViewModel.QCCheck.MobileRND_QcTaskHead_VM
+@{
+    ViewData["Title"] = "QC Check";
+}
+<style>
+    .bootstrap-select > .dropdown-toggle.bs-placeholder, .bootstrap-select > .dropdown-toggle.bs-placeholder:hover, .bootstrap-select > .dropdown-toggle.bs-placeholder:focus, .bootstrap-select > .dropdown-toggle.bs-placeholder:active {
+        color: #000;
+    }
+
+    .bootstrap-select .dropdown-toggle:focus {
+        outline: none !important;
+        outline: none !important;
+        outline-offset: -2px;
+    }
+
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 100%;
+    }
+
+    .badge-successs {
+        display: inline-block;
+        min-width: 10px;
+        padding: 3px 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #19a735;
+        border-radius: 10px;
+    }
+
+    .badge-info {
+        display: inline-block;
+        min-width: 10px;
+        padding: 3px 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #19a735;
+        border-radius: 10px;
+    }
+
+    .badge-Dangerr {
+        display: inline-block;
+        min-width: 10px;
+        padding: 3px 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #ffca5e;
+        border-radius: 10px;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="breadcomb-list">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="breadcomb-wp">
+                            <div class="breadcomb-icon">
+                                <i class="notika-icon notika-form"></i>
+                            </div>
+                            <div class="breadcomb-ctn">
+                                <h2 style="margin:13px;">QC Check</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                        <div class="breadcomb-report">
+                            <a data-toggle="tooltip" data-placement="left" asp-action="CreateTask" title="Add Task" class="btn"><i class="notika-icon notika-plus-symbol"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-example-wrap mg-t-30">
+                <div class="cmp-tb-hd cmp-int-hd">
+                    <h2>Check List</h2>
+                </div>
+                <div class="data-table-list">
+                    <div class="table-responsive">
+                        <table id="data-table-basicindex" class="table table-striped">
+                            <thead style="background-color: #d7e3ef;">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Line</th>
+                                    <th>Model</th>
+                                    <th>Lot</th>
+                                    <th>C. Type</th>
+                                    <th>Status</th>
+                                    <th>Duration</th>
+                                    <th>Employe ID</th>
+                                    <th style="text-align:center">Action's</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.MobileRND_QcTaskHead_List)
+                                {
+                                    @if (item.StatusIsToday == false)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DateString)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LineNo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ModelName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LotNo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.TaskType)
+                                            </td>
+                                            <td>
+                                                @if (item.IsComplete == "Complete")
+                                                {
+                                                    <p class="badge-successs">
+                                                        @Html.DisplayFor(modelItem => item.IsComplete)
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge-Dangerr">
+                                                        @Html.DisplayFor(modelItem => item.IsComplete)
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Duration)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EmployeeID)
+                                            </td>
+                                            <td style="text-align:center">
+                                                <a style=" font-size: large; color: blue;" asp-action="CreateTask" asp-controller="QCCheck" asp-route-id="@item.Id"><i class="fa fa-edit"></i></a>
+                                            </td>
+                                    </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td style="color: #11009d; font-weight: bold;">
+                                                @Html.DisplayFor(modelItem => item.DateString)
+                                            </td>
+                                            <td style="color: #11009d; font-weight: bold;">
+                                                @Html.DisplayFor(modelItem => item.LineNo)
+                                            </td>
+                                            <td style="color: #11009d; font-weight: bold;">
+                                                @Html.DisplayFor(modelItem => item.ModelName)
+                                            </td>
+                                            <td style="color: #11009d; font-weight: bold;">
+                                                @Html.DisplayFor(modelItem => item.LotNo)
+                                            </td>
+                                            <td> 
+                                                @Html.DisplayFor(modelItem => item.TaskType)
+                                            </td>
+                                            <td>
+                                                @if (item.IsComplete == "Complete")
+                                                {
+                                                    <span class="badge-successs">
+                                                        @Html.DisplayFor(modelItem => item.IsComplete)
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge-Dangerr">
+                                                        @Html.DisplayFor(modelItem => item.IsComplete)
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Duration)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EmployeeID)
+                                            </td>
+                                            <td style="text-align:center">
+                                                <a style=" font-size: large; color: blue;" asp-action="CreateTask" asp-controller="QCCheck" asp-route-id="@item.Id"><i class="fa fa-edit"></i></a>
+                                            </td>
+                                    </tr>
+                                    }
+                                    
+                                }
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script>
+    $(document).ready(function () {
+        $('#data-table-basicindex').dataTable({
+            "order": [[0, "desc"]]
+        });
+
+    });
+</script>
+}
+    
+
+

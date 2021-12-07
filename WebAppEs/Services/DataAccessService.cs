@@ -14,6 +14,8 @@ using WebAppEs.ViewModel.Model;
 using WebAppEs.Entity;
 using WebAppEs.ViewModel.Store;
 using EFCore.BulkExtensions;
+using WebAppEs.ViewModel.QCCheck;
+using System.Globalization;
 
 namespace WebAppEs.Services
 {
@@ -63,7 +65,6 @@ namespace WebAppEs.Services
 								  ControllerName = m.ControllerName,
 								  Icon = m.Icon,
 							  }).Distinct().OrderBy(x=> x.DisplayOrder).ToList();
-
 			return data;
 		}
 
@@ -272,7 +273,7 @@ namespace WebAppEs.Services
 
         public MobileRND_StoreHead GetStoreHead(DateTime? date, Guid? ModelId, string Lot)
         {
-			return _context.MobileRND_StoreHead.Where(x => x.Date == date && x.ModelID == ModelId && x.LotNo == Lot).FirstOrDefault();
+			return _context.MobileRND_StoreHead.Where(x => (x.Date == date || date == null) && x.ModelID == ModelId && x.LotNo == Lot).FirstOrDefault();
         }
 
         public List<StoreViewModel> GetStoreDetails(Guid Id)
@@ -364,5 +365,260 @@ namespace WebAppEs.Services
         {
             throw new NotImplementedException();
         }
+
+        public MobileRND_QcTaskHead AddTaskHead(MobileRND_QcTaskHead_VM viewModel)
+        {
+			MobileRND_QcTaskHead dd = new MobileRND_QcTaskHead();
+			if (viewModel == null)
+			{
+				return null;
+			}
+			else
+			{
+				dd.Date = DateTime.Now;
+				dd.EmployeeID = viewModel.EmployeeID;
+				dd.ModelID = (Guid)viewModel.ModelID;
+				dd.LotNo = viewModel.LotNo;
+				dd.LUser = (Guid)viewModel.LUser;
+				dd.StartTime = DateTime.Now;
+				dd.EndTime = DateTime.Now;
+				dd.TaskType = viewModel.TaskType;
+				dd.LineNo = viewModel.LineNo;
+
+				_context.MobileRND_QcTaskHead.Add(dd);
+				_context.SaveChanges();
+			}
+			return dd;
+		}
+
+        public bool AddTaskHeadDetails(MobileRND_QcTaskHeadDetails_VM viewModel)
+        {
+			MobileRND_QcTaskHeadDetails dd = new MobileRND_QcTaskHeadDetails();
+			if (viewModel == null)
+			{
+				return false;
+			}
+			else
+			{
+				dd.EmployeeID = viewModel.EmployeeID;
+				dd.TaskHeadID = viewModel.TaskHeadID;
+				dd.DateAndTime = DateTime.Now;
+				dd.StoreDetailsID = viewModel.StoreDetailsID;
+				dd.LUser = (Guid)viewModel.LUser;
+				dd.LUser = viewModel.LUser;
+				
+				_context.MobileRND_QcTaskHeadDetails.Add(dd);
+				_context.SaveChanges();
+			}
+			return true;
+		}
+
+        public MobileRND_QcTaskHeadDetails_VM GetTopOrderValueForFalse(Guid? TaskHeadID)
+        {
+			var items = (from details in _context.MobileRND_QcTaskHeadDetails.Where(x=> x.TaskHeadID == TaskHeadID && x.Status == false)
+						 
+						 join sdd in _context.MobileRND_StoreDetails
+						  on new { X1 = details.StoreDetailsID } equals new { X1 = sdd.Id }
+						  into sddp
+						 from sdetails in sddp.DefaultIfEmpty()
+						 select new MobileRND_QcTaskHeadDetails_VM()
+						 {
+							 Id = details.Id,
+							 EmployeeID = details.EmployeeID,
+							 TaskHeadID = details.TaskHeadID,
+							 DateAndTime = details.DateAndTime,
+							 StoreDetailsID = details.StoreDetailsID,
+							 Status = details.Status,
+							 SLNO = sdetails.SLNO,
+							 Location = sdetails.Moduler + "-" + sdetails.Feeder,
+							 PartNumber = sdetails.PartNumber,
+							 Moduler = sdetails.Moduler,
+							 Feeder = sdetails.Feeder,
+						 }).OrderBy(x => x.SLNO).FirstOrDefault();
+			return items;
+		}
+
+        public MobileRND_QcTaskHead_VM HeadWithDetails(Guid? Id)
+        {
+			MobileRND_QcTaskHead_VM headwithDetails = new MobileRND_QcTaskHead_VM();
+			List<MobileRND_QcTaskHeadDetails_VM> ddd = new List<MobileRND_QcTaskHeadDetails_VM>();
+			var taskhead = (from head in _context.MobileRND_QcTaskHead.Where(x => x.Id == Id)
+
+						 select new MobileRND_QcTaskHead_VM()
+						 {
+							 Id = head.Id,
+							 EmployeeID = head.EmployeeID,
+							 Date = head.Date,
+							 ModelID = head.ModelID,
+							 LotNo = head.LotNo,
+							 StartTime = head.StartTime,
+							 EndTime = head.EndTime,
+							 TaskType = head.TaskType,
+							 IsUpdate = "Update",
+							 isDisable = head.TaskType == "random" ? "" : "display:none",
+							 LineNo = head.LineNo
+						 }).FirstOrDefault();
+
+			var taskdetails = (from details  in _context.MobileRND_QcTaskHeadDetails.Where(x => x.TaskHeadID == Id)
+
+						join dd in _context.MobileRND_QcTaskHead
+						 on new { X1 = details.TaskHeadID } equals new { X1 = dd.Id }
+						 into ddp
+						from head in ddp.DefaultIfEmpty()
+
+
+						join sdd in _context.MobileRND_StoreDetails
+						 on new { X1 = details.StoreDetailsID } equals new { X1 = sdd.Id }
+						 into sddp
+						from sdetails in sddp.DefaultIfEmpty()
+
+						select new MobileRND_QcTaskHeadDetails_VM()
+						{
+							Id = details.Id,
+							TaskHeadID = details.TaskHeadID,
+							EmployeeID = details.EmployeeID,
+							DateAndTime = details.DateAndTime,
+							SLNO = sdetails.SLNO,
+							Moduler = sdetails.Moduler,
+							Feeder = sdetails.Feeder,
+							PartNumber = sdetails.PartNumber,
+							FeederName = sdetails.FeederName,
+							Location = sdetails.Moduler + "-" + sdetails.Feeder,
+							Status = details.Status,
+							StatusMessage = sdetails.Status == true ? "Matched" : "Not Matched",
+
+						}).OrderBy(x => x.SLNO).ToList();
+			if(taskhead != null)
+            {
+				headwithDetails = taskhead;
+
+				if(taskdetails.Count != 0)
+                {
+					headwithDetails.MobileRND_QcTaskHeadDetails_VM = taskdetails;
+				}
+                else
+                {
+					headwithDetails.MobileRND_QcTaskHeadDetails_VM = ddd;
+                }
+			}
+
+			return headwithDetails;
+        }
+
+        public List<MobileRND_QcTaskHead_VM> TaskHeadList()
+        {
+			DateTime? ts = DateTime.Now;
+			var v = String.Format("{0:dd/MM/yyyy h:mm:ss tt}",ts);
+			var t = DateTime.ParseExact(v, "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+
+			var query = _context.MobileRND_QcTaskHead.Select(tb => String.Format("{0:dd/MM/yyyy h:mm:ss tt}", tb.Date))
+				  .AsEnumerable()
+				  .Select(x => DateTime.ParseExact(x, "dd/MM/yyyy h:mm:ss tt",
+												CultureInfo.InvariantCulture));
+
+
+			var taskhead = (from head in _context.MobileRND_QcTaskHead.AsEnumerable()
+
+							join rm in _context.MobileRND_Models
+						    on new { X1 = head.ModelID } equals new { X1 = rm.Id }
+						    into rmp
+							from rm in rmp.DefaultIfEmpty()
+
+							select new MobileRND_QcTaskHead_VM()
+							{
+								Id = head.Id,
+								EmployeeID = head.EmployeeID,
+								Date =  head.Date,
+								ModelID = head.ModelID,
+								ModelName = rm.ModelName,
+								LotNo = head.LotNo,
+								StartTime = head.StartTime,
+								EndTime = head.EndTime,
+								TaskType = head.TaskType,
+								LineNo = "Line "+ head.LineNo,
+								StatusIsToday = String.Format("{0:dd/MM/yyyy}", head.Date) == String.Format("{0:dd/MM/yyyy}", DateTime.Today) ? true : false,
+								//OrderByDate = _context.MobileRND_QcTaskHead.Where(x => x.Id == head.Id).Select(tb => String.Format("{0:dd/MM/yyyy h:mm:ss tt}", tb.Date)).AsEnumerable().Select(x => DateTime.ParseExact(x, "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture)).FirstOrDefault(),
+								OrderByDate = DateTime.ParseExact(String.Format("{0:dd/MM/yyyy h:mm:ss tt}", head.Date), "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture).TimeOfDay,
+								DateString = String.Format("{0:dd/MM/yyyy h:mm:ss tt}", head.Date),
+								startString = String.Format("{0:h:mm:ss tt}", head.StartTime),
+								EndString = String.Format("{0:h:mm:ss tt}", head.EndTime),
+								IsComplete = (_context.MobileRND_QcTaskHeadDetails.Where(x => x.TaskHeadID == head.Id).Any(p => p.Status == false)) == true ? "In Complete" : "Complete",
+								Duration = (_context.MobileRND_QcTaskHeadDetails.Where(x => x.TaskHeadID == head.Id).Any(p => p.Status == false)) == true ? "("+String.Format("{0:h:mm:ss tt}", head.StartTime) +" - Continue..)" : "("+String.Format("{0:h:mm:ss tt}", head.StartTime) + " - " + String.Format("{0:h:mm:ss tt}", head.EndTime) +")"
+							}).OrderByDescending(x=> x.Date).ThenBy(x=> x.OrderByDate).ToList();
+
+			return taskhead;
+		}
+
+		public DateTime returnDateTime(string t)
+        {
+			var tt = DateTime.ParseExact(t, "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+			return tt;
+		}
+
+        public bool UpdateSingelStatusFromQC(Guid Id, bool IsSuccess)
+        {
+			var Details = _context.MobileRND_QcTaskHeadDetails.Where(x => x.Id == Id).FirstOrDefault();
+			Details.Status = IsSuccess;
+			_context.MobileRND_QcTaskHeadDetails.Update(Details);
+			var result = _context.SaveChanges();
+			return result > 0;
+		}
+
+        public MobileRND_QcTaskHeadDetails_VM GetTopOrderValueForRandom(Guid TaskHeadID, Guid ModelID, string lot, string Moduler, string feeder)
+        {
+			var items = (from details in _context.MobileRND_StoreHead.Where(x => x.ModelID == ModelID && x.LotNo == lot)
+
+						 join sdd in _context.MobileRND_StoreDetails
+						  on new { X1 = details.Id } equals new { X1 = sdd.HeadID }
+						  into sddp
+						 from sdetails in sddp.DefaultIfEmpty()
+						 select new MobileRND_QcTaskHeadDetails_VM()
+						 {
+							 //Id = details.Id,
+							 EmployeeID = details.EmployeeID,
+							 //TaskHeadID = details.TaskHeadID,
+							 //DateAndTime = details.DateAndTime,
+							 StoreDetailsID = sdetails.Id,
+							 Status = sdetails.Status,
+							 SLNO = sdetails.SLNO,
+							 Location = sdetails.Moduler + "-" + sdetails.Feeder,
+							 PartNumber = sdetails.PartNumber,
+							 Moduler = sdetails.Moduler,
+							 Feeder = sdetails.Feeder,
+						 }).Where(m=> m.Moduler == Moduler && m.Feeder == feeder).OrderBy(x => x.SLNO).FirstOrDefault();
+
+			return items;
+        }
+
+        public MobileRND_QcTaskHeadDetails AddRandomDataStatusFromQC(Guid? StoreDetailsId, Guid? TaskHeadID, bool status, string EmployeeID, Guid? Luser)
+        {
+			var isExist = _context.MobileRND_QcTaskHeadDetails.Where(x => (x.TaskHeadID == TaskHeadID) && (x.StoreDetailsID == StoreDetailsId)).FirstOrDefault();
+			
+			if(isExist != null)
+            {
+				var Details = _context.MobileRND_QcTaskHeadDetails.Where(x => x.Id == isExist.Id).FirstOrDefault();
+				Details.Status = status;
+				_context.MobileRND_QcTaskHeadDetails.Update(Details);
+				var result = _context.SaveChanges();
+				return isExist;
+			}
+            else
+            {
+				var StoreDetails = _context.MobileRND_StoreDetails.Where(x => x.Id == StoreDetailsId).FirstOrDefault();
+				MobileRND_QcTaskHeadDetails headDetails = new MobileRND_QcTaskHeadDetails();
+
+				headDetails.EmployeeID = EmployeeID;
+				headDetails.TaskHeadID = (Guid)TaskHeadID;
+				headDetails.DateAndTime = DateTime.Now;
+				headDetails.StoreDetailsID = (Guid)StoreDetailsId;
+				headDetails.LUser = (Guid)Luser;
+				headDetails.Status = status;
+
+				_context.MobileRND_QcTaskHeadDetails.Add(headDetails);
+				_context.SaveChanges();
+
+				return headDetails;
+			}
+		}
     }
 }
