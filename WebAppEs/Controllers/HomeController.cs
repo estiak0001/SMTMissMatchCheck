@@ -40,8 +40,14 @@ namespace WebAppEs.Controllers
 
 			DashBoard_VM DashboardData = new DashBoard_VM();
 
-			DashboardData.MobileRND_QcTaskHead_List = _dataAccessService.TaskHeadList();
+			DashboardData.MobileRND_QcTaskHead_List = _dataAccessService.TaskHeadList(DateTime.Today, "");
+			DashboardData.sequential = _dataAccessService.TaskHeadList(DateTime.Today, "sequential");
+			DashboardData.random = _dataAccessService.TaskHeadList(DateTime.Today, "random");
 
+			DashboardData.TodayTotal = _dataAccessService.DashBoardHeaderData().TodayTotal;
+			DashboardData.LastDayTotal = _dataAccessService.DashBoardHeaderData().LastDayTotal;
+			DashboardData.TodayInComplete = _dataAccessService.DashBoardHeaderData().TodayInComplete;
+			DashboardData.TodayComplete = _dataAccessService.DashBoardHeaderData().TodayComplete;
 			return View(DashboardData);
 		}
 		//[Authorize("Authorization")]

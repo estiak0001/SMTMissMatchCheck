@@ -16,6 +16,7 @@ using WebAppEs.ViewModel.Store;
 using EFCore.BulkExtensions;
 using WebAppEs.ViewModel.QCCheck;
 using System.Globalization;
+using WebAppEs.ViewModel.Home;
 
 namespace WebAppEs.Services
 {
@@ -505,16 +506,16 @@ namespace WebAppEs.Services
 			return headwithDetails;
         }
 
-        public List<MobileRND_QcTaskHead_VM> TaskHeadList()
+        public List<MobileRND_QcTaskHead_VM> TaskHeadList(DateTime? datetimeforsort, string type)
         {
-			DateTime? ts = DateTime.Now;
-			var v = String.Format("{0:dd/MM/yyyy h:mm:ss tt}",ts);
-			var t = DateTime.ParseExact(v, "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+			//DateTime? ts = DateTime.Now;
+			//var v = String.Format("{0:dd/MM/yyyy h:mm:ss tt}",ts);
+			//var t = DateTime.ParseExact(v, "dd/MM/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
 
-			var query = _context.MobileRND_QcTaskHead.Select(tb => String.Format("{0:dd/MM/yyyy h:mm:ss tt}", tb.Date))
-				  .AsEnumerable()
-				  .Select(x => DateTime.ParseExact(x, "dd/MM/yyyy h:mm:ss tt",
-												CultureInfo.InvariantCulture));
+			//var query = _context.MobileRND_QcTaskHead.Select(tb => String.Format("{0:dd/MM/yyyy h:mm:ss tt}", tb.Date))
+			//	  .AsEnumerable()
+			//	  .Select(x => DateTime.ParseExact(x, "dd/MM/yyyy h:mm:ss tt",
+			//									CultureInfo.InvariantCulture));
 
 
 			var taskhead = (from head in _context.MobileRND_QcTaskHead.AsEnumerable()
@@ -528,7 +529,7 @@ namespace WebAppEs.Services
 							{
 								Id = head.Id,
 								EmployeeID = head.EmployeeID,
-								Date =  head.Date,
+								Date = DateTime.ParseExact(String.Format("{0:dd/MM/yyyy}", head.Date), "dd/MM/yyyy", CultureInfo.InvariantCulture).Date,
 								ModelID = head.ModelID,
 								ModelName = rm.ModelName,
 								LotNo = head.LotNo,
@@ -544,7 +545,7 @@ namespace WebAppEs.Services
 								EndString = String.Format("{0:h:mm:ss tt}", head.EndTime),
 								IsComplete = (_context.MobileRND_QcTaskHeadDetails.Where(x => x.TaskHeadID == head.Id).Any(p => p.Status == false)) == true ? "In Complete" : "Complete",
 								Duration = (_context.MobileRND_QcTaskHeadDetails.Where(x => x.TaskHeadID == head.Id).Any(p => p.Status == false)) == true ? "("+String.Format("{0:h:mm:ss tt}", head.StartTime) +" - Continue..)" : "("+String.Format("{0:h:mm:ss tt}", head.StartTime) + " - " + String.Format("{0:h:mm:ss tt}", head.EndTime) +")"
-							}).OrderByDescending(x=> x.Date).ThenBy(x=> x.OrderByDate).ToList();
+							}).Where(w=> (w.Date == datetimeforsort || datetimeforsort == null) && (type == "" || w.TaskType == type)).OrderByDescending(x=> x.Date).ThenBy(x=> x.OrderByDate).ToList();
 
 			return taskhead;
 		}
@@ -620,5 +621,16 @@ namespace WebAppEs.Services
 				return headDetails;
 			}
 		}
+
+        public DashBoardTopHeaderValueUpdate_VM DashBoardHeaderData()
+        {
+			DashBoardTopHeaderValueUpdate_VM data = new DashBoardTopHeaderValueUpdate_VM();
+
+			data.TodayTotal = _context.MobileRND_QcTaskHead.AsEnumerable().Where(x => (DateTime.ParseExact(String.Format("{0:dd/MM/yyyy}", x.Date), "dd/MM/yyyy", CultureInfo.InvariantCulture).Date) == DateTime.Today).ToList().Count();
+			data.LastDayTotal = _context.MobileRND_QcTaskHead.AsEnumerable().Where(x => (DateTime.ParseExact(String.Format("{0:dd/MM/yyyy}", x.Date), "dd/MM/yyyy", CultureInfo.InvariantCulture).Date) == DateTime.Now.Date.AddDays(-1)).ToList().Count();
+			data.TodayInComplete = _context.MobileRND_QcTaskHead.AsEnumerable().Where(x => ((DateTime.ParseExact(String.Format("{0:dd/MM/yyyy}", x.Date), "dd/MM/yyyy", CultureInfo.InvariantCulture).Date) == DateTime.Today) && ((_context.MobileRND_QcTaskHeadDetails.Where(m => m.TaskHeadID == x.Id).Any(p => p.Status == false)==true))).ToList().Count();
+			data.TodayComplete = _context.MobileRND_QcTaskHead.AsEnumerable().Where(x => ((DateTime.ParseExact(String.Format("{0:dd/MM/yyyy}", x.Date), "dd/MM/yyyy", CultureInfo.InvariantCulture).Date) == DateTime.Today) && ((_context.MobileRND_QcTaskHeadDetails.Where(m => m.TaskHeadID == x.Id).Any(p => p.Status == false) == false))).ToList().Count();
+			return data;
+        }
     }
 }

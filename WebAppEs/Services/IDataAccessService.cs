@@ -8,6 +8,7 @@ using WebAppEs.ViewModel.Model;
 using WebAppEs.ViewModel.Store;
 using WebAppEs.Entity;
 using WebAppEs.ViewModel.QCCheck;
+using WebAppEs.ViewModel.Home;
 
 namespace WebAppEs.Services
 {
@@ -47,9 +48,11 @@ namespace WebAppEs.Services
 		MobileRND_QcTaskHeadDetails_VM GetTopOrderValueForRandom(Guid TaskHeadID, Guid ModelID, string lot, string Moduler, string feeder);
 
 		MobileRND_QcTaskHead_VM HeadWithDetails(Guid? Id);
-		List<MobileRND_QcTaskHead_VM> TaskHeadList();
+		List<MobileRND_QcTaskHead_VM> TaskHeadList(DateTime? datetimeforsort, string type);
 		bool UpdateSingelStatusFromQC(Guid Id, bool IsSuccess);
 
 		MobileRND_QcTaskHeadDetails AddRandomDataStatusFromQC(Guid? StoreDetailsId, Guid? TaskHeadID, bool status, string EmployeeID, Guid? Luser);
+
+		DashBoardTopHeaderValueUpdate_VM DashBoardHeaderData();
 	}
 }

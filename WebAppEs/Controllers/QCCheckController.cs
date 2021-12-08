@@ -45,7 +45,7 @@ namespace WebAppEs.Controllers
             }
 
             MobileRND_QcTaskHead_VM TaskHead = new MobileRND_QcTaskHead_VM();
-            TaskHead.MobileRND_QcTaskHead_List = _dataAccessService.TaskHeadList();
+            TaskHead.MobileRND_QcTaskHead_List = _dataAccessService.TaskHeadList(null, "");
             TaskHead.PartsModelViewModel = _dataAccessService.GetAllPartsModelList();
             return View(TaskHead);
         }
@@ -149,7 +149,15 @@ namespace WebAppEs.Controllers
             }
            
             newhead = _dataAccessService.HeadWithDetails(taskHead.Id);
-            newhead.GetTopOrderValue = new MobileRND_QcTaskHeadDetails_VM();
+            var tt = _dataAccessService.GetTopOrderValueForFalse(taskHead.Id);
+            if(tt != null)
+            {
+                newhead.GetTopOrderValue = tt;
+            }
+            else
+            {
+                newhead.GetTopOrderValue = new MobileRND_QcTaskHeadDetails_VM();
+            }
             newhead.PartsModelViewModel = _dataAccessService.GetAllPartsModelList();
            
             return View(newhead);

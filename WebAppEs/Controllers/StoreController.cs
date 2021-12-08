@@ -108,11 +108,16 @@ namespace WebAppEs.Controllers
                     {
                         postedFile.CopyTo(stream);
                     }
+                    //string conString = "Provider=Microsoft.ACE.OLEDB.12.0;" +
+                    //   @"Data Source=" + filePath + ";" +
+                    //   @"Extended Properties=" + Convert.ToChar(34).ToString() +
+                    //   @"Excel 8.0" + Convert.ToChar(34).ToString() + ";";
+
 
                     string conString = "Provider=Microsoft.ACE.OLEDB.12.0;" +
                        @"Data Source=" + filePath + ";" +
                        @"Extended Properties=" + Convert.ToChar(34).ToString() +
-                       @"Excel 8.0" + Convert.ToChar(34).ToString() + ";";
+                       @"Excel 12.0;HDR=YES;" + Convert.ToChar(34).ToString() + ";";
 
                     DataTable dt = new DataTable();
                     //conString = string.Format(conString, filePath);
@@ -141,9 +146,9 @@ namespace WebAppEs.Controllers
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        mess = "You may be entered wrong formated file. Please select correct formated file!";
+                        mess = "You may be entered wrong formated file! Please upload (.xlsx) extention file and Sheet name will be (Sheet1).";
                         ViewData["Messege"] = mess;
                         ViewData["Icon"] = "fa fa-exclamation-triangle";
                         List<StoreDetailsViewModel> empty = new List<StoreDetailsViewModel>();
